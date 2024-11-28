@@ -33,6 +33,10 @@ public class Paciente {
 		return consultas;
 	}
 
+	public void setConsultas(ArrayList<Consulta> consultas) {
+		this.consultas = consultas;
+	}
+
 	public void addConsulta(Consulta consulta) {
 		this.consultas.add(consulta);
 	}

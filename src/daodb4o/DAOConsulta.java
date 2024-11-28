@@ -6,10 +6,11 @@ import com.db4o.query.Query;
 import modelo.Consulta;
 
 public class DAOConsulta extends DAO<Consulta>{
-	public Consulta read (String nome) {
+	
+	public Consulta read (int id) {
 		Query q = manager.query();
 		q.constrain(Consulta.class);
-		q.descend("nome").constrain(nome);
+		q.descend("id").constrain(id);
 		List<Consulta> resultados = q.execute();
 		if (resultados.size()>0)
 			return resultados.get(0);

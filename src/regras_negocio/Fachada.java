@@ -8,22 +8,29 @@ package regras_negocio;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
 import java.util.List;
 
 import daodb4o.DAO;
 import daodb4o.DAOAluno;
+import daodb4o.DAOConsulta;
+import daodb4o.DAOMedico;
+import daodb4o.DAOPaciente;
 import daodb4o.DAOPessoa;
 import daodb4o.DAOTelefone;
 import modelo.Aluno;
+import modelo.Consulta;
+import modelo.Medico;
+import modelo.Paciente;
 import modelo.Pessoa;
 import modelo.Telefone;
 
 public class Fachada {
 	private Fachada() {}
 
-	private static DAOPessoa daopessoa = new DAOPessoa();
-	private static DAOAluno daoaluno = new DAOAluno();
-	private static DAOTelefone daotelefone = new DAOTelefone();
+	private static DAOMedico daoMedico = new DAOMedico();
+	private static DAOPaciente daoPaciente = new DAOPaciente();
+	private static DAOConsulta daoConsulta = new DAOConsulta();
 
 	public static void inicializar() {
 		DAO.open();
@@ -33,130 +40,125 @@ public class Fachada {
 		DAO.close();
 	}
 
-	public static Pessoa localizarPessoa(String nome) throws Exception {
-		Pessoa p = daopessoa.read(nome);
+	public static Medico localizarMedico(String crm) throws Exception {
+		Medico p = daoMedico.read(crm);
 		if (p == null) {
-			throw new Exception("pessoa inexistente:" + nome);
+			throw new Exception("pessoa inexistente:" + crm);
 		}
 		return p;
 	}
-	public static Aluno localizarAluno(String nome) throws Exception {
-		Aluno a = daoaluno.read(nome);
+	
+	public static Paciente localizarPaciente(String cpf) throws Exception {
+		Paciente a = daoPaciente.read(cpf);
 		if (a == null) {
-			throw new Exception("aluno inexistente:" + nome);
+			throw new Exception("aluno inexistente:" + cpf);
+		}
+		return a;
+	}
+	
+	public static Consulta localizarConsulta(int id) throws Exception {
+		Consulta a = daoConsulta.read(id);
+		if (a == null) {
+			throw new Exception("aluno inexistente:" + id);
 		}
 		return a;
 	}
 
-	public static void criarPessoa(String nome, String data, List<String> apelidos) throws Exception {
+	public static void criarConsulta(String data, Medico medico, Paciente paciente, String tipo ) throws Exception {
+		// ADICIONAR REGRA DE NEGOCIO AQUI
 		DAO.begin();
+		LocalDate dataFormatada = null;
 		try {
-			LocalDate.parse(data, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+			dataFormatada = LocalDate.parse(data, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
 		} catch (DateTimeParseException e) {
 			DAO.rollback();
 			throw new Exception("formato data invalido:" + data);
+		} catch (Exception e ) {
+			
 		}
-		Pessoa p = daopessoa.read(nome);
-		if (p != null) {
-			DAO.rollback();
-			throw new Exception("criar pessoa - nome ja existe:" + nome);
-		}
-		p = new Pessoa(nome);
-		p.setDtNascimento(data);
-		p.setApelidos(apelidos);
-		daopessoa.create(p);
+		
+		Consulta consulta = new Consulta(dataFormatada, paciente, medico, tipo);
+		
+		daoConsulta.create(consulta);
 		DAO.commit();
 	}
 
-	public static void criarAluno(String nome, String data, List<String>  apelidos, double nota) throws Exception {
-		DAO.begin();
-		try {
-			LocalDate.parse(data, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-		} catch (DateTimeParseException e) {
-			DAO.rollback();
-			throw new Exception("formato data invalido:" + data);
-		}
-
-		Pessoa p = daopessoa.read(nome); // nome de qualquer pessoa
+	public static void criarPaciente(String cpf, String nome) throws Exception {
+		Paciente p = daoPaciente.read(cpf);
 		if (p != null) {
 			DAO.rollback();
-			throw new Exception("criar aluno - nome ja existe:" + nome);
+			throw new Exception("criar paciente - nome ja existe:" + nome);
 		}
-
-		Aluno a = new Aluno(nome, nota);
-		a.setDtNascimento(data);
-		a.setApelidos(apelidos);
-		daoaluno.create(a);
+		Paciente a = new Paciente(cpf, nome);
+		
+		daoPaciente.create(a);
+		DAO.commit();
+	}
+	
+	public static void criarMedico(String crm, String nome, String especialidade) throws Exception {
+		Medico m = daoMedico.read(crm);
+		if (m != null) {
+			DAO.rollback();
+			throw new Exception("criar Medico - Medico ja existe:" + nome);
+		}
+		Medico medico = new Medico(crm, nome, especialidade);
+		daoMedico.create(medico);
 		DAO.commit();
 	}
 
-	public static void alterarPessoa(String nome, String data, List<String> apelidos) throws Exception {
+	public static void alterarPaciente(String cpf, String nome, ArrayList<Consulta> consultas) throws Exception {
 		// permite alterar data, foto e apelidos
 		DAO.begin();
-		Pessoa p = daopessoa.read(nome);
+		Paciente p = daoPaciente.read(cpf);
 		if (p == null) {
 			DAO.rollback();
 			throw new Exception("alterar pessoa - pessoa inexistente:" + nome);
 		}
+		
+		p.setCpf(cpf);
+		p.setNome(nome);
+		p.setConsultas(consultas);
 
-		p.setApelidos(apelidos);
-		if (data != null) {
-			try {
-				LocalDate.parse(data, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-				p.setDtNascimento(data);
-			} catch (DateTimeParseException e) {
-				DAO.rollback();
-				throw new Exception("alterar pessoa - formato data invalido:" + data);
-			}
-		}
-
-		daopessoa.update(p);
+		daoPaciente.update(p);
 		DAO.commit();
 	}
 
-	public static void alterarAluno(String nome, String data, List<String>  apelidos, double nota) throws Exception {
+	public static void alterarMedico(String nome, String crm, String Especialidade) throws Exception {
 		// permite alterar data, foto e apelidos
 		DAO.begin();
-		Aluno a = daoaluno.read(nome);
-		if (a == null) {
+		Medico m = daoMedico.read(crm);
+		if (m == null) {
 			DAO.rollback();
-			throw new Exception("alterar aluno - nome inexistente:" + nome);
+			throw new Exception("alterar medico - crm inexistente:" + crm);
 		}
 
-		a.setApelidos(apelidos);
-		if (data != null) {
-			try {
-				LocalDate.parse(data, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-				a.setDtNascimento(data);
-			} catch (DateTimeParseException e) {
-				DAO.rollback();
-				throw new Exception("alterar aluno - formato data invalido:" + data);
-			}
-		}
-		a.setNota(nota);
-		daopessoa.update(a);
+		m.setNome(nome);
+		m.setCrm(crm);
+		m.setEspecialidade(Especialidade);
+		
+		daoMedico.update(m);
 		DAO.commit();
 	}
 
-	public static void alterarData(String nome, String data) throws Exception {
+	public static void alterarData(int id, String data) throws Exception {
 		DAO.begin();
-		Pessoa p = daopessoa.read(nome);
-		if (p == null) {
+		Consulta c = daoConsulta.read(id);
+		if (c == null) {
 			DAO.rollback();
-			throw new Exception("alterar pessoa - pessoa inexistente:" + nome);
+			throw new Exception("alterar pessoa - consulta inexistente:" + id);
 		}
 
 		if (data != null) {
 			try {
-				LocalDate.parse(data, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-				p.setDtNascimento(data);
+				LocalDate dataFormatada = LocalDate.parse(data, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+				c.setData(dataFormatada);
 			} catch (DateTimeParseException e) {
 				DAO.rollback();
 				throw new Exception("alterar data - formato data invalido:" + data);
 			}
 		}
 
-		daopessoa.update(p);
+		daoConsulta.update(c);
 		DAO.commit();
 	}
 

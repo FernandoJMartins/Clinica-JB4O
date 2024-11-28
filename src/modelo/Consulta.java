@@ -1,16 +1,15 @@
 package modelo;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 public class Consulta {
 	private int id;
-	private Date data;
+	private LocalDate data;
 	private Paciente paciente;
 	private Medico medico;
 	private String tipo;
 	
-	public Consulta(int id, Date data, Paciente paciente, Medico medico, String tipo) {
-		this.id = id;
+	public Consulta(LocalDate data, Paciente paciente, Medico medico, String tipo) {
 		this.data = data;
 		this.paciente = paciente;
 		this.medico = medico;
@@ -25,11 +24,11 @@ public class Consulta {
 		this.id = id;
 	}
 
-	public Date getData() {
+	public LocalDate getData() {
 		return data;
 	}
 
-	public void setData(Date data) {
+	public void setData(LocalDate data) {
 		this.data = data;
 	}
 
