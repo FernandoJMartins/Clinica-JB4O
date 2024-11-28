@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.db4o.query.Query;
 import modelo.Consulta;
+import modelo.Medico;
 
 public class DAOConsulta extends DAO<Consulta>{
 	
@@ -22,5 +23,13 @@ public class DAOConsulta extends DAO<Consulta>{
 		int novoid = super.gerarId(Consulta.class);  	//gerar novo id da classe
 		obj.setId(novoid);				//atualizar id do objeto antes de grava-lo no banco
 		manager.store( obj );
+	}
+	
+	public List<Consulta> readAll(String caracteres) {
+		Query q = manager.query();
+		q.constrain(Consulta.class);
+		q.descend("data").constrain(caracteres).like();		//insensitive
+		List<Consulta> result = q.execute(); 
+		return result;
 	}
 }

@@ -12,18 +12,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import daodb4o.DAO;
-import daodb4o.DAOAluno;
 import daodb4o.DAOConsulta;
 import daodb4o.DAOMedico;
 import daodb4o.DAOPaciente;
-import daodb4o.DAOPessoa;
-import daodb4o.DAOTelefone;
-import modelo.Aluno;
 import modelo.Consulta;
 import modelo.Medico;
 import modelo.Paciente;
-import modelo.Pessoa;
-import modelo.Telefone;
+
 
 public class Fachada {
 	private Fachada() {}
@@ -161,108 +156,121 @@ public class Fachada {
 		daoConsulta.update(c);
 		DAO.commit();
 	}
+//
+//	public static void alterarNome(String nome, String novonome) throws Exception {
+//		DAO.begin();
+//		Pessoa p = daopessoa.read(nome); // usando chave primaria
+//		if (p == null) {
+//			DAO.rollback();
+//			throw new Exception("alterar nome - nome inexistente:" + nome);
+//		}
+//		p.setNome(novonome);
+//		daopessoa.update(p);
+//		DAO.commit();
+//	}
 
-	public static void alterarNome(String nome, String novonome) throws Exception {
+	public static void excluirMedico(String nome) throws Exception {
 		DAO.begin();
-		Pessoa p = daopessoa.read(nome); // usando chave primaria
-		if (p == null) {
+		Medico m = daoMedico.read(nome);
+		if (m == null) {
 			DAO.rollback();
-			throw new Exception("alterar nome - nome inexistente:" + nome);
+			throw new Exception("excluir Medico - nome inexistente:" + nome);
 		}
-		p.setNome(novonome);
-		daopessoa.update(p);
+
+		daoMedico.delete(m); // apaga o MEDICO pelo NOME
 		DAO.commit();
 	}
-
-	public static void excluirPessoa(String nome) throws Exception {
+	
+	public static void excluirPaciente(String nome) throws Exception {
 		DAO.begin();
-		Pessoa p = daopessoa.read(nome);
+		Paciente p = daoPaciente.read(nome);
 		if (p == null) {
 			DAO.rollback();
-			throw new Exception("excluir pessoa - nome inexistente:" + nome);
+			throw new Exception("excluir Paciente - nome inexistente:" + nome);
 		}
 
-		// desligar a pessoa de seus telefones orfaos e apaga-los do banco
-		for (Telefone t : p.getTelefones()) {
-			daotelefone.delete(t); // deletar o telefone orfao
-		}
-
-		daopessoa.delete(p); // apagar a pessoa
+		daoPaciente.delete(p); // apaga o PACIENTE pelo NOME ( essas duas classes poderiam ser uma classe só )
 		DAO.commit();
 	}
+	
+	
+	
 
-	public static void criarTelefone(String nome, String numero) throws Exception {
+//	public static void criarTelefone(String nome, String numero) throws Exception {
+//		DAO.begin();
+//		Pessoa p = daopessoa.read(nome);
+//		if (p == null) {
+//			DAO.rollback();
+//			throw new Exception("criar telefone - nome inexistente" + nome + numero);
+//		}
+//		Telefone t = daotelefone.read(numero);
+//		if (t != null) {
+//			DAO.rollback();
+//			throw new Exception("criar telefone - numero ja cadastrado:" + numero);
+//		}
+//		if (numero.isEmpty()) {
+//			DAO.rollback();
+//			throw new Exception("criar telefone - numero vazio:" + numero);
+//		}
+//
+//		t = new Telefone(numero);
+//		p.adicionar(t);
+//		daotelefone.create(t);
+//		DAO.commit();
+//	}
+
+	public static void excluirConsulta(int numero) throws Exception {
 		DAO.begin();
-		Pessoa p = daopessoa.read(nome);
-		if (p == null) {
-			DAO.rollback();
-			throw new Exception("criar telefone - nome inexistente" + nome + numero);
-		}
-		Telefone t = daotelefone.read(numero);
-		if (t != null) {
-			DAO.rollback();
-			throw new Exception("criar telefone - numero ja cadastrado:" + numero);
-		}
-		if (numero.isEmpty()) {
-			DAO.rollback();
-			throw new Exception("criar telefone - numero vazio:" + numero);
-		}
-
-		t = new Telefone(numero);
-		p.adicionar(t);
-		daotelefone.create(t);
-		DAO.commit();
-	}
-
-	public static void excluirTelefone(String numero) throws Exception {
-		DAO.begin();
-		Telefone t = daotelefone.read(numero);
-		if (t == null) {
+		Consulta c = daoConsulta.read(numero);
+		if (c == null) {
 			DAO.rollback();
 			throw new Exception("excluir telefone - numero inexistente:" + numero);
 		}
-		Pessoa p = t.getPessoa();
-		p.remover(t);
-		t.setPessoa(null);
-		daopessoa.update(p);
-		daotelefone.delete(t);
+		Paciente p = c.getPaciente();
+		p.removeConsulta(c);
+		
+		c.setPaciente(null);
+		c.setMedico(null);
+		
+		daoPaciente.update(p);
+		daoConsulta.delete(c);
 		DAO.commit();
 	}
 
-	public static void alterarNumero(String numero, String novonumero) throws Exception {
+	public static void alterarTipo(int id, String novoTipo) throws Exception {
 		DAO.begin();
-		Telefone t1 = daotelefone.read(numero);
-		if (t1 == null) {
+		Consulta c = daoConsulta.read(id);
+		if (c == null) {
 			DAO.rollback();
-			throw new Exception("alterar numero - numero inexistente:" + numero);
+			throw new Exception("alterar tipo - Consulta inexistente:" + id);
 		}
-		Telefone t2 = daotelefone.read(novonumero);
-		if (t2 != null) {
+		Consulta c2 = daoConsulta.read(id);
+//		if (c2 != null) {
+//			DAO.rollback();
+//			throw new Exception("alterar numero - novo numero ja existe:" + id);
+//		}
+		if (novoTipo.isEmpty()) {
 			DAO.rollback();
-			throw new Exception("alterar numero - novo numero ja existe:" + novonumero);
-		}
-		if (novonumero.isEmpty()) {
-			DAO.rollback();
-			throw new Exception("alterar numero - novo numero vazio:");
+			throw new Exception("alterar tipo - novo tipo vazio:");
 		}
 
-		t1.setNumero(novonumero); // substituir
-		daotelefone.update(t1);
+		c.setTipo(novoTipo); // substituir
+		daoConsulta.update(c);
 		DAO.commit();
 	}
 
-	public static List<Pessoa> listarPessoas() {
-		List<Pessoa> result = daopessoa.readAll();
+	public static List<Medico> listarMedico() {
+		List<Medico> result = daoMedico.readAll();
 		return result;
 	}
 
-	public static List<Aluno> listarAlunos() {
-		List<Aluno> result = daoaluno.readAll();
+	public static List<Paciente> listarAlunos() {
+		List<Paciente> result = daoPaciente.readAll();
 		return result;
 	}
 
-	public static List<Telefone> listarTelefones() {
-		List<Telefone> result = daotelefone.readAll();
+	public static List<Consulta> listarTelefones() {
+		List<Consulta> result = daoConsulta.readAll();
 		return result;
 	}
 
@@ -271,45 +279,47 @@ public class Fachada {
 	 * CONSULTAS IMPLEMENTADAS NOS DAO
 	 * 
 	 **********************************************************/
-	public static List<Pessoa> consultarPessoas(String caracteres) {
-		List<Pessoa> result;
+	public static List<Medico> consultarMedicos(String caracteres) {
+		List<Medico> result;
 		if (caracteres.isEmpty())
-			result = daopessoa.readAll();
+			result = daoMedico.readAll();
 		else
-			result = daopessoa.readAll(caracteres);
+			result = daoMedico.readAll(caracteres);
 		return result;
 	}
 
 
-	public static List<Telefone> consultarTelefones(String digitos) {
-		List<Telefone> result;
+	public static List<Consulta> consultarConsultas(String digitos) {
+		List<Consulta> result;
 		if (digitos.isEmpty())
-			result = daotelefone.readAll();
+			result = daoConsulta.readAll();
 		else
-			result = daotelefone.readAll(digitos);
+			result = daoConsulta.readAll(digitos);
 		return result;
 	}
 
-	public static List<Pessoa> consultarMesNascimento(String mes) {
-		List<Pessoa> result;
-		result = daopessoa.readByMes(mes);
+	public static List<Consulta> consultarPacientes(String digitos) {
+		List<Consulta> result;
+		if (digitos.isEmpty())
+			result = daoConsulta.readAll();
+		else
+			result = daoConsulta.readAll(digitos);
 		return result;
 	}
+//	public static List<Pessoa> consultarPessoasNTelefones(int n) {
+//		List<Pessoa> result;
+//		DAO.begin();
+//		result = daopessoa.readByNTelefones(n);
+//		DAO.commit();
+//		return result;
+//	}
 
-	public static List<Pessoa> consultarPessoasNTelefones(int n) {
-		List<Pessoa> result;
-		DAO.begin();
-		result = daopessoa.readByNTelefones(n);
-		DAO.commit();
-		return result;
-	}
-
-	public static boolean temTelefoneFixo(String nome) {
-		return daopessoa.temTelefoneFixo(nome);
-	}
-
-	public static List<Pessoa> consultarApelido(String ap) {
-		return daopessoa.consultarApelido(ap);
-	}
+//	public static boolean temTelefoneFixo(String nome) {
+//		return daopessoa.temTelefoneFixo(nome);
+//	}
+//
+//	public static List<Pessoa> consultarApelido(String ap) {
+//		return daopessoa.consultarApelido(ap);
+//	}
 
 }
