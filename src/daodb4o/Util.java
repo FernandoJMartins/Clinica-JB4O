@@ -13,9 +13,9 @@ import com.db4o.config.EmbeddedConfiguration;
 import com.db4o.cs.Db4oClientServer;
 import com.db4o.cs.config.ClientConfiguration;
 
-import modelo.Aluno;
-import modelo.Pessoa;
-import modelo.Telefone;
+import modelo.Paciente;
+import modelo.Medico;
+import modelo.Consulta;
 
 public class Util {
 	private static ObjectContainer manager=null;
@@ -31,15 +31,15 @@ public class Util {
 		config.common().messageLevel(0);  // mensagens na tela 0(desliga),1,2,3...
 		
 		// habilitar cascata para alterar, apagar e recuperar objetos
-		config.common().objectClass(Pessoa.class).cascadeOnDelete(false);;
-		config.common().objectClass(Pessoa.class).cascadeOnUpdate(true);;
-		config.common().objectClass(Pessoa.class).cascadeOnActivate(true);
-		config.common().objectClass(Aluno.class).cascadeOnDelete(false);;
-		config.common().objectClass(Aluno.class).cascadeOnUpdate(true);;
-		config.common().objectClass(Aluno.class).cascadeOnActivate(true);
-		config.common().objectClass(Telefone.class).cascadeOnDelete(false);;
-		config.common().objectClass(Telefone.class).cascadeOnUpdate(true);;
-		config.common().objectClass(Telefone.class).cascadeOnActivate(true);		
+		config.common().objectClass(Medico.class).cascadeOnDelete(false);;
+		config.common().objectClass(Medico.class).cascadeOnUpdate(true);;
+		config.common().objectClass(Medico.class).cascadeOnActivate(true);
+		config.common().objectClass(Paciente.class).cascadeOnDelete(false);;
+		config.common().objectClass(Paciente.class).cascadeOnUpdate(true);;
+		config.common().objectClass(Paciente.class).cascadeOnActivate(true);
+		config.common().objectClass(Consulta.class).cascadeOnDelete(false);;
+		config.common().objectClass(Consulta.class).cascadeOnUpdate(true);;
+		config.common().objectClass(Consulta.class).cascadeOnActivate(true);		
 		
 		//conexao local
 		manager = Db4oEmbedded.openFile(config, "banco.db4o");
@@ -57,17 +57,17 @@ public class Util {
 		ClientConfiguration config = Db4oClientServer.newClientConfiguration( ) ;
 		config.common().messageLevel(0);  // 0,1,2,3...
 
-		config.common().objectClass(Pessoa.class).cascadeOnDelete(false);;
-		config.common().objectClass(Pessoa.class).cascadeOnUpdate(true);;
-		config.common().objectClass(Pessoa.class).cascadeOnActivate(true);
-		config.common().objectClass(Aluno.class).cascadeOnDelete(false);;
-		config.common().objectClass(Aluno.class).cascadeOnUpdate(true);;
-		config.common().objectClass(Aluno.class).cascadeOnActivate(true);
-		config.common().objectClass(Telefone.class).cascadeOnDelete(false);;
-		config.common().objectClass(Telefone.class).cascadeOnUpdate(true);;
-		config.common().objectClass(Telefone.class).cascadeOnActivate(true);		
+		config.common().objectClass(Medico.class).cascadeOnDelete(false);;
+		config.common().objectClass(Medico.class).cascadeOnUpdate(true);;
+		config.common().objectClass(Medico.class).cascadeOnActivate(true);
+		config.common().objectClass(Paciente.class).cascadeOnDelete(false);;
+		config.common().objectClass(Paciente.class).cascadeOnUpdate(true);;
+		config.common().objectClass(Paciente.class).cascadeOnActivate(true);
+		config.common().objectClass(Consulta.class).cascadeOnDelete(false);;
+		config.common().objectClass(Consulta.class).cascadeOnUpdate(true);;
+		config.common().objectClass(Consulta.class).cascadeOnActivate(true);		
 
-		//Conexão remota 
+		//Conexï¿½o remota 
 		//***************
 		//String ipservidor="localhost";
 		//String ipservidor="10.0.4.43";			// computador do professor (lab)
