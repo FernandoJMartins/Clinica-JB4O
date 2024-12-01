@@ -55,4 +55,11 @@ public class Consulta {
 	public void setTipo(String tipo) {
 		this.tipo = tipo;
 	}
+
+	@Override
+	public String toString() {
+		return "Consulta [id=" + id + ", data=" + data + ", paciente=" + paciente + ", medico=" + medico + ", tipo="
+				+ tipo + "]";
+	}
+	
 }

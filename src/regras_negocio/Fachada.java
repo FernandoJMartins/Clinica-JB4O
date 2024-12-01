@@ -169,27 +169,27 @@ public class Fachada {
 //		DAO.commit();
 //	}
 
-	public static void excluirMedico(String nome) throws Exception {
+	public static void excluirMedico(String crm) throws Exception {
 		DAO.begin();
-		Medico m = daoMedico.read(nome);
+		Medico m = daoMedico.read(crm);
 		if (m == null) {
 			DAO.rollback();
-			throw new Exception("excluir Medico - nome inexistente:" + nome);
+			throw new Exception("excluir Medico - CRM inexistente:" + crm);
 		}
 
-		daoMedico.delete(m); // apaga o MEDICO pelo NOME
+		daoMedico.delete(m); // apaga o MEDICO pelo CRM
 		DAO.commit();
 	}
 	
-	public static void excluirPaciente(String nome) throws Exception {
+	public static void excluirPaciente(String cpf) throws Exception {
 		DAO.begin();
-		Paciente p = daoPaciente.read(nome);
+		Paciente p = daoPaciente.read(cpf);
 		if (p == null) {
 			DAO.rollback();
-			throw new Exception("excluir Paciente - nome inexistente:" + nome);
+			throw new Exception("excluir Paciente - nome inexistente:" + cpf);
 		}
 
-		daoPaciente.delete(p); // apaga o PACIENTE pelo NOME ( essas duas classes poderiam ser uma classe só )
+		daoPaciente.delete(p); // apaga o PACIENTE pelo CPF ( essas duas classes poderiam ser uma classe só )
 		DAO.commit();
 	}
 	
@@ -259,17 +259,17 @@ public class Fachada {
 		DAO.commit();
 	}
 
-	public static List<Medico> listarMedico() {
+	public static List<Medico> listarMedicos() {
 		List<Medico> result = daoMedico.readAll();
 		return result;
 	}
 
-	public static List<Paciente> listarAlunos() {
+	public static List<Paciente> listarPacientes() {
 		List<Paciente> result = daoPaciente.readAll();
 		return result;
 	}
 
-	public static List<Consulta> listarTelefones() {
+	public static List<Consulta> listarConsultas() {
 		List<Consulta> result = daoConsulta.readAll();
 		return result;
 	}

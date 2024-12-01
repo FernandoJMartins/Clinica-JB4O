@@ -44,8 +44,17 @@ public class Paciente {
 	public void removeConsulta(Consulta consulta) {
 		this.consultas.remove(consulta);
 	}
-	
-	
+
+	@Override
+	public String toString() {
+		String texto = " nome=" +  nome + ", cpf" + cpf;
+
+		texto += "  consultas: ";
+		for(Consulta c : consultas)
+			texto += c.getId() + ",";
+
+		return texto;
+	}
 	
 	
 }

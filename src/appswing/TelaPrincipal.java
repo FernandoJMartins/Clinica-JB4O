@@ -20,9 +20,9 @@ import javax.swing.SwingConstants;
 
 public class TelaPrincipal {
 	private JFrame frame;
-	private JMenu mnPessoa;
-	private JMenu mnAluno;
-	private JMenu mnTelefone;
+	private JMenu mnConsultas;
+	private JMenu mnMedico;
+	private JMenu mnPaciente;
 	private JMenu mnConsulta;
 	private JLabel label;
 
@@ -66,47 +66,48 @@ public class TelaPrincipal {
 		label.setBounds(0, 0, 444, 249);
 		label.setText("Inicializando...");
 		label.setBounds(0, 0, frame.getWidth(), frame.getHeight());
-		ImageIcon imagem = new ImageIcon(getClass().getResource("/imagens/agenda.jpg"));
+		ImageIcon imagem = new ImageIcon(getClass().getResource("/imagens/clinicaconsulta.png"));
 		imagem = new ImageIcon(imagem.getImage().getScaledInstance(label.getWidth(),label.getHeight(), Image.SCALE_DEFAULT));
 		label.setIcon(imagem);
 		frame.getContentPane().add(label);
 
 		JMenuBar menuBar = new JMenuBar();
 		frame.setJMenuBar(menuBar);
-		mnPessoa = new JMenu("Pessoa");
-		mnPessoa.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				new TelaPessoa();
-			}
-		});
-		menuBar.add(mnPessoa);
 		
-		mnAluno = new JMenu("Aluno");
-		mnAluno.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				new TelaAluno();
-			}
-		});
-		menuBar.add(mnAluno);
-
-		mnTelefone = new JMenu("Telefone");
-		mnTelefone.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				new TelaTelefone();
-			}
-		});
-		menuBar.add(mnTelefone);
-		
-		mnConsulta = new JMenu("Consulta");
-		mnConsulta.addMouseListener(new MouseAdapter() {
+		mnMedico = new JMenu("Medico");
+		mnMedico.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				new TelaConsulta();
 			}
 		});
+		menuBar.add(mnMedico);
+		
+		mnPaciente = new JMenu("Paciente");
+		mnPaciente.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				new TelaPaciente();
+			}
+		});
+		menuBar.add(mnPaciente);
+		
+		mnConsulta = new JMenu("Consulta");
+		mnConsulta.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				new TelaPaciente();
+			}
+		});
 		menuBar.add(mnConsulta);
+		
+		mnConsultas = new JMenu("Consultas");
+		mnConsultas.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				new TelaPaciente();
+			}
+		});
+		menuBar.add(mnConsultas);
 	}
 }
