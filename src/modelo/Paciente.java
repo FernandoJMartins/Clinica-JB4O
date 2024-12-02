@@ -12,6 +12,9 @@ public class Paciente {
 		this.cpf = cpf;
 		this.nome = nome;
 	}
+	public Paciente(String cpf) {
+		this.cpf = cpf;
+	}
 
 	public String getCpf() {
 		return cpf;

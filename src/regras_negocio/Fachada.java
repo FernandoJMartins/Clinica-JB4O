@@ -84,7 +84,8 @@ public class Fachada {
 			DAO.rollback();
 			throw new Exception("criar paciente - nome ja existe:" + nome);
 		}
-		Paciente a = new Paciente(cpf, nome);
+		Paciente a = new Paciente(cpf);
+		a.setNome(nome);
 		
 		daoPaciente.create(a);
 		DAO.commit();
@@ -96,7 +97,9 @@ public class Fachada {
 			DAO.rollback();
 			throw new Exception("criar Medico - Medico ja existe:" + nome);
 		}
-		Medico medico = new Medico(crm, nome, especialidade);
+		Medico medico = new Medico(crm);
+		medico.setNome(nome);
+		medico.setEspecialidade(especialidade);
 		daoMedico.create(medico);
 		DAO.commit();
 	}

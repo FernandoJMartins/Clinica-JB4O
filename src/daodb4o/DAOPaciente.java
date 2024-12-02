@@ -12,7 +12,7 @@ public class DAOPaciente extends DAO<Paciente>{
 		public Paciente read (String cpf) {
 			Query q = manager.query();
 			q.constrain(Paciente.class);
-			q.descend("nome").constrain(cpf);
+			q.descend("cpf").constrain(cpf);
 			List<Paciente> resultados = q.execute();
 			if (resultados.size()>0)
 				return resultados.get(0);
@@ -24,7 +24,7 @@ public class DAOPaciente extends DAO<Paciente>{
 		public List<Paciente> readAll(String caracteres) {
 			Query q = manager.query();
 			q.constrain(Paciente.class);
-			q.descend("nome").constrain(caracteres).like();		//insensitive
+			q.descend("cpf").constrain(caracteres).like();		//insensitive
 			List<Paciente> result = q.execute(); 
 			return result;
 		}

@@ -34,7 +34,6 @@ import javax.swing.table.DefaultTableModel;
 import modelo.Consulta;
 //import modelo.Aluno;
 //import modelo.Telefone;
-import daodb4o.DAO;
 import modelo.Paciente;
 import regras_negocio.Fachada;
 
@@ -82,6 +81,7 @@ public class TelaPaciente {
 			@Override
 			public void windowClosing(WindowEvent e) {
 				Fachada.finalizar();
+				frame.dispose();
 			}
 		});
 		frame.setTitle("Pacientes");
@@ -106,8 +106,8 @@ public class TelaPaciente {
 						Paciente c = Fachada.localizarPaciente(cpf);
 						String nome = c.getNome();
 						//String consulta = c.getConsultas()+"";
-						textField_1.setText(cpf);
-						textField_2.setText(nome);
+						textField_1.setText(nome);
+						textField_2.setText(cpf);
 						//textField_3.setText(String.join(",", c.getConsultas()));
 						//textField_4.setText("");
 						//textField_5.setText(nota);
@@ -202,7 +202,7 @@ public class TelaPaciente {
 		textField_1.setBackground(Color.WHITE);
 		frame.getContentPane().add(textField_1);
 
-		label_4 = new JLabel("nascimento");
+		label_4 = new JLabel("cpf:");
 		label_4.setBounds(31, 264, 62, 14);
 		label_4.setHorizontalAlignment(SwingConstants.LEFT);
 		label_4.setFont(new Font("Tahoma", Font.PLAIN, 11));
@@ -337,9 +337,9 @@ public class TelaPaciente {
 			label_2.setText("resultados: " + lista.size() + " pacientes   - selecione uma linha para editar");
 
 			// redimensionar a coluna 3 e 4
-			table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF); // desabilita
-			table.getColumnModel().getColumn(3).setMinWidth(200); // coluna dos apelidos
-			table.getColumnModel().getColumn(4).setMinWidth(200); // coluna dos telefones
+			//table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF); // desabilita
+			table.getColumnModel().getColumn(3).setMinWidth(200); // coluna das consultas
+			//table.getColumnModel().getColumn(4).setMinWidth(200); // coluna dos telefones
 			table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS); // desabilita
 
 		} catch (Exception erro) {
