@@ -35,7 +35,6 @@ public class DAOPaciente extends DAO<Paciente>{
 			q.constrain(Paciente.class);
 			
 			List<Paciente> todosPacientes = q.execute();
-			
 			List<Paciente> result = new ArrayList<>();
 			
 			for (Paciente p : todosPacientes) {

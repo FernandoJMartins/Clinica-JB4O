@@ -33,11 +33,19 @@ public class DAOConsulta extends DAO<Consulta>{
 		return result;
 	}
 	
-	public List<Consulta> readAllPlano(String data) { // metodo especial
+	public List<Consulta> readAllPlanoPorData(String data) { // metodo especial
 		Query q = manager.query();
 		q.constrain(Consulta.class);
-		q.descend("data").constrain(data).like();	//insensitive
+		q.descend("data").constrain(data).equal();	//insensitive
 		q.descend("tipo").constrain("plano").like(); //insensitive
+		List<Consulta> result = q.execute(); 
+		return result;
+	}
+	
+	public List<Consulta> consultaPacientesSeConsultaramComMedico(String crm){
+		Query q = manager.query();
+		q.constrain(Consulta.class);
+		q.descend("medico").constrain(crm).equal();	//insensitive
 		List<Consulta> result = q.execute(); 
 		return result;
 	}

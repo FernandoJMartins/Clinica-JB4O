@@ -23,7 +23,7 @@ public class DAOMedico extends DAO<Medico> {
 	public List<Medico> readAll(String caracteres) {
 		Query q = manager.query();
 		q.constrain(Medico.class);
-		q.descend("crm").constrain(caracteres).like();		//insensitive
+		q.descend("especialidade").constrain(caracteres).like();		//insensitive
 		List<Medico> result = q.execute(); 
 		return result;
 	}

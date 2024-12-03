@@ -281,15 +281,29 @@ public class Fachada {
 	
 	public static List<Consulta> consultasDoPlanoNaData(String data){
 		List<Consulta> result;
-		result = daoConsulta.readAllPlano(data);
-		return result;
+	    if (data == null || data.trim().isEmpty()) {
+	        throw new IllegalArgumentException("A data não pode ser nula ou vazia.");
+	    }
+	    return daoConsulta.readAllPlanoPorData(data);
 	}
 	
-//	public static List<Paciente> consultaPacientesSeConsultaramComMedico(String crm){
-//		List<Paciente> result;
-//		result = daoPaciente.readAllPlano(data);
-//		return result;
-//	}
+	public static List<Paciente> consultaPacientesSeConsultaramComMedico(String crm){
+		List<Paciente> pacientesComConsulta;
+		List<Paciente> result = new ArrayList<>();
+		pacientesComConsulta = daoPaciente.readAllMaiorQue(0);
+
+		for (Paciente p : pacientesComConsulta) {
+			for (Consulta c : p.getConsultas()) {
+				if (c.getMedico().getCrm().equals(crm)) {
+					if(!result.contains(p)) {
+						result.add(p);
+					}
+				}
+			}
+		}
+		
+		return result;
+	}
 	
 	public static List<Paciente> consultaNumeroConsultasMaiorQue(int n){
 		List<Paciente> result;
