@@ -27,8 +27,8 @@ import javax.swing.ListSelectionModel;
 import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableModel;
 
-import modelo.Pessoa;
-import modelo.Telefone;
+import modelo.Consulta;
+import modelo.Paciente;
 import regras_negocio.Fachada;
 
 public class TelaConsultaQuery {
@@ -129,23 +129,25 @@ public class TelaConsultaQuery {
 				else {
 					label_4.setText("");
 					switch(index) {
+					
 					case 0: 
-						String mes = JOptionPane.showInputDialog("digite o mes");
-						List<Pessoa> resultado1 = Fachada.consultarMesNascimento(mes) ;
-						listagemPessoa(resultado1);
-						break;
-					case 1: 
-						String modelo = JOptionPane.showInputDialog("digite o apelido");
-						List<Pessoa> resultado2 = Fachada.consultarApelido(modelo);
-						listagemPessoa(resultado2);		
-						break;
-					case 2: 
-						String n = JOptionPane.showInputDialog("digite N");
+						String n = JOptionPane.showInputDialog("digite a quantidade n");
 						int numero = Integer.parseInt(n);
-						List<Pessoa> resultado3 = Fachada.consultarPessoasNTelefones(numero);
-						listagemPessoa(resultado3);
+						//List<Pessoa> resultado1 = Fachada.consultarMesNascimento(mes) ;
+						listagemPacienteComNConsultas(numero);
 						break;
-
+						
+					case 1: 
+						String crm = JOptionPane.showInputDialog("digite o medico X");
+						//List<Pessoa> resultado2 = Fachada.consultarApelido(modelo);
+						listagemPacientesSeConsultaramComMedico(crm);		
+						break;
+						
+					case 2: 
+						String data = JOptionPane.showInputDialog("digite a data");
+						//List<Consulta> resultado3 = Fachada.consultasDoPlanoNaData(data);
+						listagemConsultaPorData(data);
+						break;
 					}
 				}
 
@@ -156,50 +158,113 @@ public class TelaConsultaQuery {
 
 		comboBox = new JComboBox<String>();
 		comboBox.setToolTipText("selecione a consulta");
+		
 		comboBox.setModel(new DefaultComboBoxModel<>(
-				new String[] {"pessoas que nasceram no mes X","pessoa com apelido X", "pessoas com N telefones" }));
+				new String[] {"quais os pacientes com mais de N consultas",
+						"quais os pacientes que se consultaram com medico X", 
+						"quais as consultas do tipo plano na data X" }));
+		
 		comboBox.setBounds(21, 10, 513, 22);
 		frame.getContentPane().add(comboBox);
 	}
-
-	public void listagemPessoa(List<Pessoa> lista) {
+	
+	public void listagemConsultaPorData(String esp) {
 		try {
+			List<Consulta> lista = Fachada.listarConsultas();
+
 			// objeto model contem todas as linhas e colunas da tabela
 			DefaultTableModel model = new DefaultTableModel();
 			table.setModel(model);
 
-			// criar as colunas (0,1,2) da tabela
-			model.addColumn("Id");
-			model.addColumn("Nome");
-			model.addColumn("Nascimento");
-			model.addColumn("Apelidos");
-			model.addColumn("Telefones");
+			// criar as colunas (0,1,2,3) da tabela
+			model.addColumn("ID");
+			model.addColumn("Data");
+			model.addColumn("Paciente");
+			model.addColumn("Medico");
+			model.addColumn("Tipo");
 
 			// criar as linhas da tabela
-			String texto1, texto2;
-			for (Pessoa p : lista) {
-				texto1 = String.join(",", p.getApelidos()); // concatena strings
-				if (p.getTelefones().size() > 0) {
-					texto2 = "";
-					for (Telefone t : p.getTelefones())
-						texto2 += t.getNumero() + " ";
-				} else
-					texto2 = "sem telefone";
-				//adicionar linha no table
-				model.addRow(new Object[] { p.getId(), p.getNome(), p.getDtNascimento(), texto1, texto2 });
-
+			for (Consulta c : lista) {
+				model.addRow(new Object[] { c.getId(),c.getData(), c.getPaciente(), c.getMedico(),c.getTipo() });
 			}
-			// redimensionar a coluna 0,3 e 4
-			table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF); // desabilita
-			table.getColumnModel().getColumn(0).setMaxWidth(40); // coluna id
-			table.getColumnModel().getColumn(3).setMinWidth(200); // coluna dos apelidos
-			table.getColumnModel().getColumn(4).setMinWidth(200); // coluna dos telefones
+			//label_2.setText("resultados: " + lista.size() + " consultas   - selecione uma linha para editar");
+
 			table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS); // desabilita
 
 		} catch (Exception erro) {
 			label.setText(erro.getMessage());
 		}
 	}
+	
+	public void listagemPacientesSeConsultaramComMedico(String crm) {
+		try {
+			List<Paciente> lista = Fachada.consultaPacientesSeConsultaramComMedico(crm);
+
+			// objeto model contem todas as linhas e colunas da tabela
+			DefaultTableModel model = new DefaultTableModel();
+			table.setModel(model);
+
+			// criar as colunas (0,1,2) da tabela
+			model.addColumn("Nome");
+			model.addColumn("CPF");
+			model.addColumn("Consultas");
+
+
+			// criar as linhas da tabela
+			String texto2;
+			for (Paciente p : lista) {
+				if (p.getConsultas().size() > 0) {
+					texto2 = "";
+					for (Consulta c : p.getConsultas())
+						texto2 += c.getId() + " ";
+				} else
+					texto2 = "sem consultas";
+
+				model.addRow(new Object[] { p.getNome(), p.getCpf(), texto2});
+
+			}
+			table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS); // desabilita
+
+		} catch (Exception erro) {
+			label.setText(erro.getMessage());
+		}
+	}
+
+	public void listagemPacienteComNConsultas(int n) {
+		try {
+			List<Paciente> lista = Fachada.consultaNumeroConsultasMaiorQue(n);
+
+			// objeto model contem todas as linhas e colunas da tabela
+			DefaultTableModel model = new DefaultTableModel();
+			table.setModel(model);
+
+			// criar as colunas (0,1,2) da tabela
+			model.addColumn("Nome");
+			model.addColumn("CPF");
+			model.addColumn("Consultas");
+
+
+			// criar as linhas da tabela
+			String texto2;
+			for (Paciente p : lista) {
+				if (p.getConsultas().size() > 0) {
+					texto2 = "";
+					for (Consulta c : p.getConsultas())
+						texto2 += c.getId() + " ";
+				} else
+					texto2 = "sem consultas";
+
+				model.addRow(new Object[] { p.getNome(), p.getCpf(), texto2});
+
+			}
+			table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS); // desabilita
+
+		} catch (Exception erro) {
+			label.setText(erro.getMessage());
+		}
+	}
+	
+	
 
 
 }

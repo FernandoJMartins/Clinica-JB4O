@@ -51,7 +51,7 @@ public class Fachada {
 		return a;
 	}
 	
-	public static Consulta (int id) throws Exception {
+	public static Consulta localizarConsulta (int id) throws Exception {
 		Consulta a = daoConsulta.read(id);
 		if (a == null) {
 			throw new Exception("consulta inexistente:" + id);
@@ -279,11 +279,19 @@ public class Fachada {
 		return result;
 	}
 	
-	public static List<Consulta> consultasDoPlanoNaData(String data){
-		List<Consulta> result;
+	public static List<Consulta> consultasDoPlanoNaData(String data) throws Exception{
+		//List<Consulta> result;
 	    if (data == null || data.trim().isEmpty()) {
 	        throw new IllegalArgumentException("A data não pode ser nula ou vazia.");
 	    }
+		
+		try {
+			LocalDate.parse(data, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+		} catch (DateTimeParseException e) {
+			DAO.rollback();
+			throw new Exception("formato data invalido:" + data);
+		}
+		
 	    return daoConsulta.readAllPlanoPorData(data);
 	}
 	

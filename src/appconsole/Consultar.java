@@ -52,13 +52,13 @@ public class Consultar {
 //                System.out.println(c);
 //            }
 //
-//            System.out.println("\nPacientes com mais de 1 consultas:");
-//            for (Paciente p : Fachada.consultaNumeroConsultasMaiorQue(1)) {
-//                System.out.println(p);
-//            }
+             System.out.println("\nPacientes com mais de 1 consultas:");
+             for (Paciente p : Fachada.consultaNumeroConsultasMaiorQue(1)) {
+             	System.out.println(p);
+            }
 //            
             System.out.println("\nPacientes que Se Consultaram com o Medico de crm ABC1:");
-            for (Paciente p : Fachada.consultaPacientesSeConsultaramComMedico("1233321")) {
+            for (Paciente p : Fachada.consultaPacientesSeConsultaramComMedico("ABC1")) {
                 System.out.println(p);
             }
 
