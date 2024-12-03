@@ -164,18 +164,6 @@ public class Fachada {
 		daoConsulta.update(c);
 		DAO.commit();
 	}
-//
-//	public static void alterarNome(String nome, String novonome) throws Exception {
-//		DAO.begin();
-//		Pessoa p = daopessoa.read(nome); // usando chave primaria
-//		if (p == null) {
-//			DAO.rollback();
-//			throw new Exception("alterar nome - nome inexistente:" + nome);
-//		}
-//		p.setNome(novonome);
-//		daopessoa.update(p);
-//		DAO.commit();
-//	}
 
 	public static void excluirMedico(String crm) throws Exception {
 		DAO.begin();
@@ -201,31 +189,6 @@ public class Fachada {
 		DAO.commit();
 	}
 	
-	
-	
-
-//	public static void criarTelefone(String nome, String numero) throws Exception {
-//		DAO.begin();
-//		Pessoa p = daopessoa.read(nome);
-//		if (p == null) {
-//			DAO.rollback();
-//			throw new Exception("criar telefone - nome inexistente" + nome + numero);
-//		}
-//		Telefone t = daotelefone.read(numero);
-//		if (t != null) {
-//			DAO.rollback();
-//			throw new Exception("criar telefone - numero ja cadastrado:" + numero);
-//		}
-//		if (numero.isEmpty()) {
-//			DAO.rollback();
-//			throw new Exception("criar telefone - numero vazio:" + numero);
-//		}
-//
-//		t = new Telefone(numero);
-//		p.adicionar(t);
-//		daotelefone.create(t);
-//		DAO.commit();
-//	}
 
 	public static void excluirConsulta(int numero) throws Exception {
 		DAO.begin();
@@ -314,20 +277,23 @@ public class Fachada {
 			result = daoConsulta.readAll(digitos);
 		return result;
 	}
-//	public static List<Pessoa> consultarPessoasNTelefones(int n) {
-//		List<Pessoa> result;
-//		DAO.begin();
-//		result = daopessoa.readByNTelefones(n);
-//		DAO.commit();
+	
+	public static List<Consulta> consultasDoPlanoNaData(String data){
+		List<Consulta> result;
+		result = daoConsulta.readAllPlano(data);
+		return result;
+	}
+	
+//	public static List<Paciente> consultaPacientesSeConsultaramComMedico(String crm){
+//		List<Paciente> result;
+//		result = daoPaciente.readAllPlano(data);
 //		return result;
 //	}
-
-//	public static boolean temTelefoneFixo(String nome) {
-//		return daopessoa.temTelefoneFixo(nome);
-//	}
-//
-//	public static List<Pessoa> consultarApelido(String ap) {
-//		return daopessoa.consultarApelido(ap);
-//	}
-
+	
+	public static List<Paciente> consultaNumeroConsultasMaiorQue(int n){
+		List<Paciente> result;
+		result = daoPaciente.readAllMaiorQue(n);
+		return result;
+	}
+	
 }

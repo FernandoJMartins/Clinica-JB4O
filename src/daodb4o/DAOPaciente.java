@@ -1,5 +1,6 @@
 package daodb4o;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.db4o.query.Query;
@@ -21,11 +22,27 @@ public class DAOPaciente extends DAO<Paciente>{
 		}
 		
 		
-		public List<Paciente> readAll(String caracteres) {
+		public List<Paciente> readAll(String cpf) {
 			Query q = manager.query();
 			q.constrain(Paciente.class);
-			q.descend("cpf").constrain(caracteres).like();		//insensitive
+			q.descend("cpf").constrain(cpf).like();		//insensitive
 			List<Paciente> result = q.execute(); 
+			return result;
+		}
+		
+		public List<Paciente> readAllMaiorQue(int n) {
+			Query q = manager.query();
+			q.constrain(Paciente.class);
+			
+			List<Paciente> todosPacientes = q.execute();
+			
+			List<Paciente> result = new ArrayList<>();
+			
+			for (Paciente p : todosPacientes) {
+				if (p.getConsultas().size() > n) {
+					result.add(p);
+				}
+			}
 			return result;
 		}
 	

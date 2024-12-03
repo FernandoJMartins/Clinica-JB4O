@@ -25,10 +25,19 @@ public class DAOConsulta extends DAO<Consulta>{
 		manager.store( obj );
 	}
 	
-	public List<Consulta> readAll(String caracteres) {
+	public List<Consulta> readAll(String data) {
 		Query q = manager.query();
 		q.constrain(Consulta.class);
-		q.descend("data").constrain(caracteres).like();		//insensitive
+		q.descend("data").constrain(data).like();		//insensitive
+		List<Consulta> result = q.execute(); 
+		return result;
+	}
+	
+	public List<Consulta> readAllPlano(String data) {
+		Query q = manager.query();
+		q.constrain(Consulta.class);
+		q.descend("data").constrain(data).like();	//insensitive
+		q.descend("tipo").constrain("plano").like(); //insensitive
 		List<Consulta> result = q.execute(); 
 		return result;
 	}
