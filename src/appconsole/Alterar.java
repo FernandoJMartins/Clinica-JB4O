@@ -11,19 +11,21 @@ public class Alterar {
 
 	public Alterar(){
 		Fachada.inicializar();
-		//alteraçao 1
+		//alteraï¿½ao 1
 		try {
-			Fachada.alterarData("joao","01/02/1990");
-			System.out.println("alterado data de nascimento de joao para mes 02");
+			Fachada.alterarData(1, "12/12/2024");
+			System.out.println("alterado data da consulta");
+			System.out.println(Fachada.listarConsultas());
 		}
 		catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
 		
-		//alteraçao 2
+		//alteraï¿½ao 2
 		try {
-			Fachada.alterarNumero("988880000", "999999999");
-			System.out.println("alterado numero 988880000 para 999999999");
+			Fachada.alterarPaciente("1234567889", "novoNome");
+			System.out.println("alterado nome do paciente");
+			System.out.println(Fachada.localizarPaciente("1234567889"));
 		}
 		catch (Exception e) {
 			System.out.println(e.getMessage());

@@ -51,7 +51,7 @@ public class Fachada {
 		return a;
 	}
 	
-	public static Consulta localizarConsulta(int id) throws Exception {
+	public static Consulta (int id) throws Exception {
 		Consulta a = daoConsulta.read(id);
 		if (a == null) {
 			throw new Exception("consulta inexistente:" + id);
@@ -183,7 +183,7 @@ public class Fachada {
 		Paciente p = daoPaciente.read(cpf);
 		if (p == null) {
 			DAO.rollback();
-			throw new Exception("excluir Paciente - nome inexistente:" + cpf);
+			throw new Exception("excluir Paciente - cpf inexistente:" + cpf);
 		}
 
 		daoPaciente.delete(p); // apaga o PACIENTE pelo CPF ( essas duas classes poderiam ser uma classe só )
@@ -196,7 +196,7 @@ public class Fachada {
 		Consulta c = daoConsulta.read(numero);
 		if (c == null) {
 			DAO.rollback();
-			throw new Exception("excluir telefone - numero inexistente:" + numero);
+			throw new Exception("excluir consulta - numero inexistente:" + numero);
 		}
 		Paciente p = c.getPaciente();
 		p.removeConsulta(c);

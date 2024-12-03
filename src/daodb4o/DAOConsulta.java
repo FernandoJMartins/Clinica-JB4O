@@ -33,7 +33,7 @@ public class DAOConsulta extends DAO<Consulta>{
 		return result;
 	}
 	
-	public List<Consulta> readAllPlano(String data) {
+	public List<Consulta> readAllPlano(String data) { // metodo especial
 		Query q = manager.query();
 		q.constrain(Consulta.class);
 		q.descend("data").constrain(data).like();	//insensitive

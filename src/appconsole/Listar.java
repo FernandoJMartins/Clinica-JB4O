@@ -5,45 +5,44 @@ package appconsole;
  * Prof. Fausto Ayres
  **********************************/
 
-
-
+import modelo.Consulta;
+import modelo.Medico;
 import modelo.Paciente;
 import regras_negocio.Fachada;
 
 public class Listar {
 
-	public Listar(){
-		try {
-			Fachada.inicializar();
+    public Listar() {
+        try {
+            Fachada.inicializar();
 
-//			System.out.println("*** Listagem de pessoas:");
-//			for(Pessoa p : Fachada.listarPessoas())		
-//				System.out.println(p);
-//
-//			System.out.println("\n*** Listagem de alunos:");
-//			for(Aluno a : Fachada.listarAlunos())		
-//				System.out.println(a);
-//
-//			System.out.println("\n*** Listagem de telefones:");
-//			for(Telefone t : Fachada.listarTelefones())	
-//				System.out.println(t);
-			
-			System.out.println("*** Listagem de pacientes:");
-			for(Paciente p: Fachada.listarPacientes()) {
-				System.out.println(p);
-			}
+            // Listar médicos
+            System.out.println("*** Listagem de médicos:");
+            for (Medico m : Fachada.listarMedicos()) {
+                System.out.println(m);
+            }
 
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
-		}
-		
-		Fachada.finalizar();
-	}
+            // Listar pacientes
+            System.out.println("\n*** Listagem de pacientes:");
+            for (Paciente p : Fachada.listarPacientes()) {
+                System.out.println(p);
+            }
 
+            // Listar consultas
+            System.out.println("\n*** Listagem de consultas:");
+            for (Consulta c : Fachada.listarConsultas()) {
+                System.out.println(c);
+            }
 
-	//=================================================
-	public static void main(String[] args) {
-		new Listar();
-	}
+        } catch (Exception e) {
+            System.out.println("Erro: " + e.getMessage());
+        } finally {
+            Fachada.finalizar();
+        }
+    }
+
+    //=================================================
+    public static void main(String[] args) {
+        new Listar();
+    }
 }
-

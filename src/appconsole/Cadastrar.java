@@ -16,10 +16,17 @@ public class Cadastrar {
 		try {
 			System.out.println("cadastrando pessoas...");
 			Fachada.inicializar();
-			
-			//Fachada.criarMedico("123", "Bruno", "UROLOGISTA");
 		
-			Fachada.criarPaciente("1234567", "Caio");
+			Fachada.criarPaciente("1234567889", "Cai2o");
+			Fachada.criarMedico("Medico 1", "123332", "Cardiologista");
+			Fachada.criarConsulta("11/02/2000", "1234567889", "123332", "Plano");
+			
+
+			System.out.println(Fachada.localizarPaciente("1234567889"));
+			System.out.println(Fachada.localizarMedico("123332"));
+			System.out.println(Fachada.listarConsultas());
+
+			
 			System.out.println("cadastrando medico...");
 
 			
