@@ -6,9 +6,9 @@ public class Medico {
 	private String nome;
 	private String especialidade;
 	
-	public Medico(String crm, String nome, String especialidade) {
-		this.crm = crm;
+	public Medico(String nome, String crm, String especialidade) {
 		this.nome = nome;
+		this.crm = crm;
 		this.especialidade = especialidade;
 	}
 	

@@ -4,16 +4,20 @@ import java.time.LocalDate;
 
 public class Consulta {
 	private int id;
-	private LocalDate data;
+	private String data;
 	private Paciente paciente;
 	private Medico medico;
 	private String tipo;
 	
-	public Consulta(LocalDate data, Paciente paciente, Medico medico, String tipo) {
+	public Consulta(String data, Paciente paciente, Medico medico, String tipo) {
 		this.data = data;
 		this.paciente = paciente;
 		this.medico = medico;
 		this.tipo = tipo;
+	}
+	
+	public Consulta() {
+		
 	}
 
 	public int getId() {
@@ -24,11 +28,11 @@ public class Consulta {
 		this.id = id;
 	}
 
-	public LocalDate getData() {
+	public String getData() {
 		return data;
 	}
 
-	public void setData(LocalDate data) {
+	public void setData(String data) {
 		this.data = data;
 	}
 

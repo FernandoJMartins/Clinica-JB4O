@@ -72,8 +72,11 @@ public class Fachada {
 			
 		}
 		
-		Consulta consulta = new Consulta(dataFormatada, paciente, medico, tipo);
-		
+		Consulta consulta = new Consulta();
+		consulta.setData(dataFormatada);
+		consulta.setPaciente(paciente);
+		consulta.setMedico(medico);
+		consulta.setTipo(tipo);
 		daoConsulta.create(consulta);
 		DAO.commit();
 	}
@@ -91,7 +94,7 @@ public class Fachada {
 		DAO.commit();
 	}
 	
-	public static void criarMedico(String crm, String nome, String especialidade) throws Exception {
+	public static void criarMedico(String nome, String crm, String especialidade) throws Exception {
 		Medico m = daoMedico.read(crm);
 		if (m != null) {
 			DAO.rollback();
@@ -104,7 +107,9 @@ public class Fachada {
 		DAO.commit();
 	}
 
-	public static void alterarPaciente(String cpf, String nome, ArrayList<Consulta> consultas) throws Exception {
+	//public static void alterarPaciente(String cpf, String nome, ArrayList<Consulta> consultas) throws Exception {
+	public static void alterarPaciente(String cpf, String nome) throws Exception {
+	
 		// permite alterar data, foto e apelidos
 		DAO.begin();
 		Paciente p = daoPaciente.read(cpf);
@@ -113,15 +118,15 @@ public class Fachada {
 			throw new Exception("alterar pessoa - pessoa inexistente:" + nome);
 		}
 		
-		p.setCpf(cpf);
+		//p.setCpf(cpf);
 		p.setNome(nome);
-		p.setConsultas(consultas);
+		//p.setConsultas(consultas);
 
 		daoPaciente.update(p);
 		DAO.commit();
 	}
 
-	public static void alterarMedico(String nome, String crm, String Especialidade) throws Exception {
+	public static void alterarMedico(String nome, String crm, String especialidade) throws Exception {
 		// permite alterar data, foto e apelidos
 		DAO.begin();
 		Medico m = daoMedico.read(crm);
@@ -131,8 +136,8 @@ public class Fachada {
 		}
 
 		m.setNome(nome);
-		m.setCrm(crm);
-		m.setEspecialidade(Especialidade);
+		//m.setCrm(crm);
+		m.setEspecialidade(especialidade);
 		
 		daoMedico.update(m);
 		DAO.commit();

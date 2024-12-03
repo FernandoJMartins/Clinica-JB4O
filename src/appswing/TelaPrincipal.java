@@ -78,7 +78,7 @@ public class TelaPrincipal {
 		mnMedico.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				new TelaConsulta();
+				new TelaMedico();
 			}
 		});
 		menuBar.add(mnMedico);
@@ -96,7 +96,7 @@ public class TelaPrincipal {
 		mnConsulta.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				new TelaPaciente();
+				new TelaConsulta();
 			}
 		});
 		menuBar.add(mnConsulta);

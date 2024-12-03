@@ -165,7 +165,7 @@ public class TelaPaciente {
 		frame.getContentPane().add(button_4);
 
 		label = new JLabel("");
-		label.setBounds(21, 372, 607, 14);
+		label.setBounds(21, 372, 697, 14);
 		label.setForeground(Color.RED);
 		frame.getContentPane().add(label);
 
@@ -259,7 +259,7 @@ public class TelaPaciente {
 //					String[] apelidos = textField_3.getText().trim().split(",");
 //					double nota = Double.parseDouble(textField_5.getText().trim());
 //					Fachada.alterarAluno(nome, nascimento, new ArrayList<>(Arrays.asList(apelidos)), nota);
-					Fachada.alterarPaciente(cpf, nome, null);
+					Fachada.alterarPaciente(cpf, nome);
 
 //					String numero = textField_4.getText();
 //					if (!numero.isEmpty())
@@ -329,7 +329,7 @@ public class TelaPaciente {
 					for (Consulta c : p.getConsultas())
 						texto2 += c.getId() + " ";
 				} else
-					texto2 = "sem telefone";
+					texto2 = "sem consultas";
 
 				model.addRow(new Object[] { p.getNome(), p.getCpf(), texto2});
 
