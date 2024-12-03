@@ -338,7 +338,7 @@ public class TelaPaciente {
 
 			// redimensionar a coluna 3 e 4
 			//table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF); // desabilita
-			table.getColumnModel().getColumn(3).setMinWidth(200); // coluna das consultas
+			//table.getColumnModel().getColumn(3).setMinWidth(200); // coluna das consultas
 			//table.getColumnModel().getColumn(4).setMinWidth(200); // coluna dos telefones
 			table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS); // desabilita
 

@@ -14,9 +14,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.time.LocalDate;
-//import java.util.ArrayList;
-//import java.util.Arrays;
+
 import java.util.List;
 
 import javax.swing.JButton;
@@ -33,10 +31,9 @@ import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableModel;
 
 import modelo.Consulta;
-import modelo.Paciente;
-import modelo.consulta;
+
 import regras_negocio.Fachada;
-import javax.swing.JComboBox;
+
 
 public class TelaConsulta {
 	private JDialog frame;
@@ -106,21 +103,19 @@ public class TelaConsulta {
 			public void mouseClicked(MouseEvent e) {
 				try {
 					if (table.getSelectedRow() >= 0) {
-						// pegar o nome, crm e consultas do consulta selecionado
+						// pegar a data, paciente, medico e tipo da consulta selecionada
 						int id = (int) table.getValueAt(table.getSelectedRow(), 0);
 						Consulta c = Fachada.localizarConsulta(id);
 						String data = c.getData().toString();
 						String medico = c.getMedico().getCrm();
 						String paciente = c.getPaciente().getCpf();
 						String tipo = c.getTipo();
-						//String consulta = c.getConsultas()+"";
+						
 						textField_1.setText(data);
-						textField_2.setText(medico);
-						textField_3.setText(paciente);
+						textField_2.setText(paciente);
+						textField_3.setText(medico);
 						textField_4.setText(tipo);
 
-						//textField_4.setText("");
-						//textField_5.setText(nota);
 						label.setText("");
 					}
 				} catch (Exception erro) {
@@ -149,19 +144,16 @@ public class TelaConsulta {
 		button_4.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					if (textField_2.getText().isEmpty()) {
-						label.setText("crm vazio");
-						return;
-					}
-					// pegar o nome na linha selecionada
-					String crm = textField_2.getText();
+					int id = (int) table.getValueAt(table.getSelectedRow(), 0);
+					Consulta c = Fachada.localizarConsulta(id);
+
 					Object[] options = { "Confirmar", "Cancelar" };
 					int escolha = JOptionPane.showOptionDialog(null,
-							"Esta operacao apagara os dados de " + crm, "Alerta",
+							"Esta operacao apagara os dados de " + c, "Alerta",
 							JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, options, options[1]);
 					if (escolha == 0) {
-						Fachada.excluirconsulta(crm);
-						label.setText("consulta excluido");
+						Fachada.excluirConsulta(c.getId());
+						label.setText("consulta excluida");
 						listagem(); // listagem
 					} else
 						label.setText("operacao cancelada");
@@ -234,18 +226,15 @@ public class TelaConsulta {
 						label.setText("nome vazio");
 						return;
 					}
-					String nome = textField_1.getText().trim();
-					String crm = textField_2.getText().trim();
-					String especialidade = textField_3.getText().trim();
-					//String[] apelidos = textField_3.getText().trim().split(",");
-					//double nota = Double.parseDouble(textField_5.getText().trim());
-					Fachada.criarconsulta(nome,crm, especialidade);
-//					Fachada.criarAluno(nome, nascimento,new ArrayList<>( Arrays.asList(apelidos)), nota);
-//					String numero = textField_4.getText();
-//					if (!numero.isEmpty())
-//						Fachada.criarTelefone(nome, numero);
+									
+					String data = textField_1.getText().trim();
+					String paciente = textField_2.getText().trim();
+					String medico = textField_3.getText().trim();
+					String tipo = textField_4.getText().trim();
+					
+					Fachada.criarConsulta(data,paciente,medico,tipo);
 
-					label.setText("consulta criado");
+					label.setText("consulta criada");
 					listagem();
 				} catch (Exception ex) {
 					label.setText(ex.getMessage());
@@ -265,18 +254,13 @@ public class TelaConsulta {
 						label.setText("crm vazio");
 						return;
 					}
-					String nome = textField_1.getText().trim();
-					String crm = textField_2.getText().trim();
-					String especialidade = textField_3.getText().trim();
-//					String[] apelidos = textField_3.getText().trim().split(",");
-//					double nota = Double.parseDouble(textField_5.getText().trim());
-//					Fachada.alterarAluno(nome, nascimento, new ArrayList<>(Arrays.asList(apelidos)), nota);
-					Fachada.alterarconsulta(nome,crm,especialidade);
+					int id = (int) table.getValueAt(table.getSelectedRow(), 0);
 
-//					String numero = textField_4.getText();
-//					if (!numero.isEmpty())
-//						Fachada.criarTelefone(nome, numero);
-					label.setText("consulta alterado");
+					String data = textField_1.getText().trim();
+					
+					Fachada.alterarData(id,data);
+
+					label.setText("data da consulta alterada");
 					listagem();
 				} catch (Exception ex2) {
 					label.setText(ex2.getMessage());
@@ -296,8 +280,8 @@ public class TelaConsulta {
 			public void actionPerformed(ActionEvent e) {
 				textField_1.setText("");
 				textField_2.setText("");
-				//textField_3.setText("");
-				//textField_4.setText("");
+				textField_3.setText("");
+				textField_4.setText("");
 				//textField_5.setText("");
 			}
 		});
@@ -309,7 +293,7 @@ public class TelaConsulta {
 		textField_3.setBounds(101, 290, 86, 20);
 		frame.getContentPane().add(textField_3);
 		
-		label_1 = new JLabel("consulta:");
+		label_1 = new JLabel("medico:");
 		label_1.setHorizontalAlignment(SwingConstants.LEFT);
 		label_1.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		label_1.setBounds(31, 294, 46, 14);
@@ -327,17 +311,7 @@ public class TelaConsulta {
 		textField_4.setBounds(238, 291, 86, 20);
 		frame.getContentPane().add(textField_4);
 
-//		label_7 = new JLabel("nova consulta");
-//		label_7.setBounds(21, 295, 74, 14);
-//		label_7.setHorizontalAlignment(SwingConstants.LEFT);
-//		label_7.setFont(new Font("Tahoma", Font.PLAIN, 11));
-//		frame.getContentPane().add(label_7);
 
-//		textField_4 = new JTextField();
-//		textField_4.setBounds(101, 291, 86, 20);
-//		textField_4.setFont(new Font("Dialog", Font.PLAIN, 12));
-//		textField_4.setColumns(10);
-//		frame.getContentPane().add(textField_4);
 
 
 		frame.setVisible(true);

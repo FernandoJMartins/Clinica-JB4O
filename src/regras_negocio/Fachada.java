@@ -46,7 +46,7 @@ public class Fachada {
 	public static Paciente localizarPaciente(String cpf) throws Exception {
 		Paciente a = daoPaciente.read(cpf);
 		if (a == null) {
-			throw new Exception("aluno inexistente:" + cpf);
+			throw new Exception("paciente inexistente:" + cpf);
 		}
 		return a;
 	}
@@ -54,30 +54,32 @@ public class Fachada {
 	public static Consulta localizarConsulta(int id) throws Exception {
 		Consulta a = daoConsulta.read(id);
 		if (a == null) {
-			throw new Exception("aluno inexistente:" + id);
+			throw new Exception("consulta inexistente:" + id);
 		}
 		return a;
 	}
 
-	public static void criarConsulta(String data, Medico medico, Paciente paciente, String tipo ) throws Exception {
+	//public static void criarConsulta(String data, Paciente paciente, Medico medico, String tipo ) throws Exception {
+	public static void criarConsulta(String data, String paciente, String medico, String tipo ) throws Exception {
+
 		// ADICIONAR REGRA DE NEGOCIO AQUI
 		DAO.begin();
-		LocalDate dataFormatada = null;
 		try {
-			dataFormatada = LocalDate.parse(data, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+			LocalDate.parse(data, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
 		} catch (DateTimeParseException e) {
 			DAO.rollback();
 			throw new Exception("formato data invalido:" + data);
-		} catch (Exception e ) {
-			
 		}
-		
+		Paciente pacientelocalizado = localizarPaciente(paciente);
 		Consulta consulta = new Consulta();
-		consulta.setData(dataFormatada);
-		consulta.setPaciente(paciente);
-		consulta.setMedico(medico);
+		consulta.setData(data);
+		consulta.setPaciente(pacientelocalizado);
+		consulta.setMedico(localizarMedico(medico));
 		consulta.setTipo(tipo);
+		pacientelocalizado.addConsulta(consulta);
+		
 		daoConsulta.create(consulta);
+		daoPaciente.update(pacientelocalizado);
 		DAO.commit();
 	}
 
@@ -148,19 +150,18 @@ public class Fachada {
 		Consulta c = daoConsulta.read(id);
 		if (c == null) {
 			DAO.rollback();
-			throw new Exception("alterar pessoa - consulta inexistente:" + id);
+			throw new Exception("alterar data - consulta inexistente:" + id);
 		}
-
+		
 		if (data != null) {
 			try {
-				LocalDate dataFormatada = LocalDate.parse(data, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-				c.setData(dataFormatada);
+				LocalDate.parse(data, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
 			} catch (DateTimeParseException e) {
-				DAO.rollback();
-				throw new Exception("alterar data - formato data invalido:" + data);
+				DAO.rollback();;
+				throw new Exception("formato data invalido:" + data);
 			}
 		}
-
+		c.setData(data);
 		daoConsulta.update(c);
 		DAO.commit();
 	}
