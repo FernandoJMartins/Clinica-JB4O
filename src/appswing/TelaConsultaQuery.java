@@ -168,9 +168,9 @@ public class TelaConsultaQuery {
 		frame.getContentPane().add(comboBox);
 	}
 	
-	public void listagemConsultaPorData(String esp) {
+	public void listagemConsultaPorData(String data) {
 		try {
-			List<Consulta> lista = Fachada.listarConsultas();
+			List<Consulta> lista = Fachada.consultasDoPlanoNaData(data);
 
 			// objeto model contem todas as linhas e colunas da tabela
 			DefaultTableModel model = new DefaultTableModel();
@@ -242,6 +242,7 @@ public class TelaConsultaQuery {
 			model.addColumn("Nome");
 			model.addColumn("CPF");
 			model.addColumn("Consultas");
+			
 
 
 			// criar as linhas da tabela

@@ -171,10 +171,11 @@ public class TelaConsulta {
 		label.setForeground(Color.RED);
 		frame.getContentPane().add(label);
 
-		button = new JButton("Buscar por crm");
+		button = new JButton("Buscar por id");
 		button.setBounds(175, 27, 149, 23);
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				label.setText("");
 				listagem();
 			}
 		});
@@ -319,19 +320,27 @@ public class TelaConsulta {
 
 	public void listagem() {
 		try {
-			List<Consulta> lista = Fachada.listarConsultas();
-
+			
 			// objeto model contem todas as linhas e colunas da tabela
 			DefaultTableModel model = new DefaultTableModel();
 			table.setModel(model);
-
-			// criar as colunas (0,1,2,3) da tabela
+			
+			// criar as colunas (0,1,2,3) da tabela			
 			model.addColumn("ID");
 			model.addColumn("Data");
 			model.addColumn("Paciente");
 			model.addColumn("Medico");
 			model.addColumn("Tipo");
 
+			table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS); // desabilita
+			
+			if (!textField.getText().isEmpty()) {
+				Consulta c = Fachada.localizarConsulta(Integer.parseInt(textField.getText()));
+				model.addRow(new Object[] { c.getId(),c.getData(), c.getPaciente(), c.getMedico(),c.getTipo() });
+				return;
+			}
+			
+			List<Consulta> lista = Fachada.listarConsultas();
 
 			// criar as linhas da tabela
 			//String texto2;
@@ -341,14 +350,8 @@ public class TelaConsulta {
 				model.addRow(new Object[] { c.getId(),c.getData(), c.getPaciente(), c.getMedico(),c.getTipo() });
 
 			}
+			
 			label_2.setText("resultados: " + lista.size() + " consultas   - selecione uma linha para editar");
-
-			// redimensionar a coluna 3 e 4
-			//table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF); // desabilita
-			//table.getColumnModel().getColumn(3).setMinWidth(200); // coluna das consultas
-			//table.getColumnModel().getColumn(4).setMinWidth(200); // coluna dos telefones
-			table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS); // desabilita
-
 		} catch (Exception erro) {
 			label.setText(erro.getMessage());
 		}

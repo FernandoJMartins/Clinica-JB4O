@@ -23,9 +23,9 @@ public class Alterar {
 		
 		//altera�ao 2
 		try {
-			Fachada.alterarPaciente("1234567889", "novoNome");
+			Fachada.alterarPaciente("001", "novoNome");
 			System.out.println("alterado nome do paciente");
-			System.out.println(Fachada.localizarPaciente("1234567889"));
+			System.out.println(Fachada.localizarPaciente("001"));
 		}
 		catch (Exception e) {
 			System.out.println(e.getMessage());

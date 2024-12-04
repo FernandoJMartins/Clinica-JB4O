@@ -324,7 +324,7 @@ public class TelaMedico {
 
 	public void listagem() {
 		try {
-			List<Medico> lista = Fachada.listarMedicos();
+			List<Medico> lista = Fachada.consultarMedicos(textField.getText());
 
 			// objeto model contem todas as linhas e colunas da tabela
 			DefaultTableModel model = new DefaultTableModel();

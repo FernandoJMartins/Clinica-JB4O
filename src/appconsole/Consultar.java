@@ -47,10 +47,10 @@ public class Consultar {
 //                System.out.println(c);
 //            }
 //
-//            System.out.println("\nConsultas realizadas no plano em data específica (11/02/2000):");
-//            for (Consulta c : Fachada.consultasDoPlanoNaData("11/02/2000")) {
-//                System.out.println(c);
-//            }
+            System.out.println("\nConsultas realizadas no plano em data específica (11/02/2000):");
+            for (Consulta c : Fachada.consultasDoPlanoNaData("11/02/2000")) {
+                System.out.println(c);
+            }
 //
              System.out.println("\nPacientes com mais de 1 consultas:");
              for (Paciente p : Fachada.consultaNumeroConsultasMaiorQue(1)) {

@@ -59,17 +59,38 @@ public class Fachada {
 		return a;
 	}
 
-	//public static void criarConsulta(String data, Paciente paciente, Medico medico, String tipo ) throws Exception {
 	public static void criarConsulta(String data, String paciente, String medico, String tipo ) throws Exception {
-
-		// ADICIONAR REGRA DE NEGOCIO AQUI
+		//PRINCIPAL REGRA DE NEGÓCIO 
 		DAO.begin();
+		LocalDate dataConsulta;
+		Paciente pacienteLocalizado;
 		try {
-			LocalDate.parse(data, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+			dataConsulta = LocalDate.parse(data, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+			pacienteLocalizado = localizarPaciente(paciente);
+			System.out.println(dataConsulta + "passou");
 		} catch (DateTimeParseException e) {
 			DAO.rollback();
 			throw new Exception("formato data invalido:" + data);
 		}
+		  catch(Exception e){
+			throw new Exception("Paciente não localizado:"+ paciente);
+		}
+		
+		
+		if (tipo.equals("plano")) {
+			
+			LocalDate dataMin = dataConsulta.minusDays(8);
+			System.out.println(dataMin + "dataMin");
+			for (Consulta c : pacienteLocalizado.getConsultas()) {
+				
+				if ( LocalDate.parse(c.getData(),DateTimeFormatter.ofPattern("dd/MM/yyyy")).isAfter(dataMin) || LocalDate.parse(c.getData(),DateTimeFormatter.ofPattern("dd/MM/yyyy")).isBefore(dataMin))  {
+					if (c.getMedico().getCrm().equals(medico) && c.getTipo().equals("plano"))   {
+						throw new Exception("Não pode haver duas consultas de um paciente pelo plano num intervalo de 7 dias com o mesmo médico");
+					}
+				}
+			}
+		}
+		
 		Paciente pacientelocalizado = localizarPaciente(paciente);
 		Consulta consulta = new Consulta();
 		consulta.setData(data);
@@ -185,7 +206,11 @@ public class Fachada {
 			DAO.rollback();
 			throw new Exception("excluir Paciente - cpf inexistente:" + cpf);
 		}
-
+		
+		for (Consulta c : p.getConsultas()) {
+			 c.setPaciente(null);
+		 }
+		 
 		daoPaciente.delete(p); // apaga o PACIENTE pelo CPF ( essas duas classes poderiam ser uma classe só )
 		DAO.commit();
 	}
@@ -198,8 +223,12 @@ public class Fachada {
 			DAO.rollback();
 			throw new Exception("excluir consulta - numero inexistente:" + numero);
 		}
+		
 		Paciente p = c.getPaciente();
-		p.removeConsulta(c);
+		if (!(p == null)) {
+			p.removeConsulta(c);
+		}
+		
 		
 		c.setPaciente(null);
 		c.setMedico(null);
@@ -216,7 +245,7 @@ public class Fachada {
 			DAO.rollback();
 			throw new Exception("alterar tipo - Consulta inexistente:" + id);
 		}
-		Consulta c2 = daoConsulta.read(id);
+		//Consulta c2 = daoConsulta.read(id);
 //		if (c2 != null) {
 //			DAO.rollback();
 //			throw new Exception("alterar numero - novo numero ja existe:" + id);
@@ -270,12 +299,12 @@ public class Fachada {
 		return result;
 	}
 
-	public static List<Consulta> consultarPacientes(String digitos) {
-		List<Consulta> result;
+	public static List<Paciente> consultarPacientes(String digitos) {
+		List<Paciente> result;
 		if (digitos.isEmpty())
-			result = daoConsulta.readAll();
+			result = daoPaciente.readAll();
 		else
-			result = daoConsulta.readAll(digitos);
+			result = daoPaciente.readAll(digitos);
 		return result;
 	}
 	
